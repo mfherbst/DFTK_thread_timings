@@ -18,12 +18,14 @@ function run_julia_payload(;case, n_julia, n_blas, n_fft)
     ENV["JULIA_BLAS_THREADS"] = string(n_blas)
     ENV["DFTK_BENCHMARK_PAYLOAD"] = payload
 
-    println("Running case=$case, n_julia=$n_julia, n_fft=$n_fft, n_blas=$n_blas")
     !isdir(case) && mkdir(case)
     logfile = case * "/$(n_julia)_$(n_fft)_$(n_blas).log"
-    open(logfile, "w") do fp
-        redirect_stdout(fp) do
-            run(`$juliaexe --project=@. $(joinpath(@__DIR__, "payload.jl"))`)
+    if !isfile(logfile)
+        println("Running case=$case, n_julia=$n_julia, n_fft=$n_fft, n_blas=$n_blas")
+        open(logfile, "w") do fp
+            redirect_stdout(fp) do
+                run(`$juliaexe --project=@. $(joinpath(@__DIR__, "payload.jl"))`)
+            end
         end
     end
 
