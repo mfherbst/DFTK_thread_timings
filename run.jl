@@ -77,6 +77,7 @@ function generate_initial_dataframe()
     append!(df, make_matrix(["Si"], n_julia=1:2, n_blas=1:2, n_fft=1:2))
     append!(df, make_matrix(["Fe"], n_julia=1:4, n_blas=1:4, n_fft=1:4))
     append!(df, make_matrix(["CoFeGaMn"], n_julia=1:4, n_blas=1:4, n_fft=1:4))
+    append!(df, make_matrix(["Caffeine"], n_julia=1:4, n_blas=1:4, n_fft=1:4))
     df
 end
 
