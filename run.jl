@@ -1,26 +1,26 @@
 using DataFrames
 using JDF
 
-function run_julia_payload(;case, n_julia, n_blas, n_fft)
-    payload = case * "_scfres_guess.jld2"
-    if !isfile(payload)
+function generate_input_data(case)
+    if !isfile(case * "_scfres_guess.jld2")
         println("Generating input data for $case")
-        let
-            include("make_$case.jl")
-        end
+        include("make_$case.jl")
     end
+end
 
+function run_julia_payload(;case, n_julia, n_blas, n_fft)
     juliaexe = Sys.get_process_title()
     isempty(juliaexe) && (juliaexe = "julia")
 
     ENV["JULIA_NUM_THREADS"]  = string(n_julia)
     ENV["JULIA_FFTW_THREADS"] = string(n_fft)
     ENV["JULIA_BLAS_THREADS"] = string(n_blas)
-    ENV["DFTK_BENCHMARK_PAYLOAD"] = payload
+    ENV["DFTK_BENCHMARK_PAYLOAD"] = case * "_scfres_guess.jld2"
 
     !isdir(case) && mkdir(case)
     logfile = case * "/$(n_julia)_$(n_fft)_$(n_blas).log"
     if !isfile(logfile)
+        generate_input_data(case)
         println("Running case=$case, n_julia=$n_julia, n_fft=$n_fft, n_blas=$n_blas")
         open(logfile, "w") do fp
             redirect_stdout(fp) do
