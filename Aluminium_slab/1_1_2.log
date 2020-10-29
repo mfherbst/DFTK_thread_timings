@@ -1,0 +1,63 @@
+Julia version: 1.6.0-DEV.1324
+
+Threading configuration: 
+       JULIA_NUM_THREADS:   1
+      JULIA_FFTW_THREADS:   2
+      JULIA_BLAS_THREADS:   1
+Payload:  Aluminium_slab_scfres_guess.jld2
+
+System facts:
+    fft_size:      (25, 25, 120)
+    kpoints:       72
+    n_electrons:   60
+    n_bands:       33
+
+Compiling code ...
+Timing SCF ...
+
+n     Energy            Eₙ-Eₙ₋₁     ρout-ρin   Diag
+---   ---------------   ---------   --------   ----
+  1   -41.42843956980         NaN   3.06e-01    1.8 
+  2   -40.82014875215    6.08e-01   7.97e-02    6.4 
+  3   +428.4029293418    4.69e+02   1.57e+00    17.6 
+  4   -16.45714732957   -4.45e+02   3.73e-01    10.5 
+  5   -41.22325014181   -2.48e+01   3.66e-02    6.3 
+  6   -17.73204848957    2.35e+01   3.30e-01    8.6 
+  7   -41.25920407825   -2.35e+01   5.45e-02    7.9 
+  8   -41.32809577641   -6.89e-02   3.30e-02    3.1 
+  9   -41.43159231898   -1.03e-01   1.51e-02    2.6 
+ 10   -41.46602499562   -3.44e-02   1.65e-03    4.3 
+ 11   -41.46492457558    1.10e-03   2.76e-03    6.1 
+ 12   -41.46599292882   -1.07e-03   1.57e-03    4.2 
+Energy breakdown:
+    Kinetic             17.3430015
+    AtomicLocal         6.8638896 
+    AtomicNonlocal      7.9713384 
+    Ewald               -53.9147822
+    PspCorrection       -3.7611666
+    Hartree             0.0837424 
+    Xc                  -16.0520160
+
+    total               -41.465992928820
+
+ ──────────────────────────────────────────────────────────────────────────────
+                                       Time                   Allocations      
+                               ──────────────────────   ───────────────────────
+       Tot / % measured:            1138s / 100%             335GiB / 100%     
+
+ Section               ncalls     time   %tot     avg     alloc   %tot      avg
+ ──────────────────────────────────────────────────────────────────────────────
+ self_consistent_field      1    1136s   100%   1136s    335GiB  100%    335GiB
+   LOBPCG                 864    1028s  90.6%   1.19s    288GiB  85.9%   341MiB
+     Hamiltonian mu...  6.58k     467s  41.1%  70.9ms   40.7GiB  12.2%  6.33MiB
+     block multipli...  30.8k     250s  22.0%  8.12ms   73.3GiB  21.9%  2.44MiB
+     rayleigh_ritz      5.72k    87.8s  7.73%  15.4ms   1.44GiB  0.43%   265KiB
+     ortho              25.3k    85.7s  7.55%  3.39ms   50.5GiB  15.1%  2.04MiB
+   energy_hamiltonian      25    66.3s  5.84%   2.65s   12.1GiB  3.60%   494MiB
+   compute_density         12    38.0s  3.35%   3.17s   34.5GiB  10.3%  2.88GiB
+   KerkerDosMixing         12   7.24ms  0.00%   603μs   20.7MiB  0.01%  1.73MiB
+     SimpleMixing          12   2.13ms  0.00%   177μs   20.6MiB  0.01%  1.72MiB
+   QR orthonormaliz...    864    777μs  0.00%   900ns     0.00B  0.00%    0.00B
+ ──────────────────────────────────────────────────────────────────────────────
+
+Total time in ns: 1136621272212

@@ -33,5 +33,6 @@ scfres = self_consistent_field(basis; ρspin=ρspin, tol=100,
 # Truncate scfres such that density is guess density
 scfres = (ρ=guess_density(basis), ρspin=ρspin,
           basis=basis, ψ=scfres.ψ, occupation=scfres.occupation,
-          eigenvalues=scfres.eigenvalues, εF=scfres.εF)
+          eigenvalues=scfres.eigenvalues, εF=scfres.εF,
+          maxiter=45)
 save_scfres("CoFeGaMn_scfres_guess.jld2", scfres)

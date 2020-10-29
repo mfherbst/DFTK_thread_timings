@@ -32,8 +32,10 @@ println("Timing SCF ...")
 println(); flush(stdout)
 reset_timer!(DFTK.timer)
 start_time = time_ns()
+callback = (info -> flush(stdout)) ∘ DFTK.ScfDefaultCallback()
 scfres = self_consistent_field(scfres.basis; ρ=scfres.ρ, ρspin=scfres.ρspin, ψ=scfres.ψ,
-                               tol=1e-10, mixing=KerkerDosMixing());
+                               tol=1e-14, mixing=KerkerDosMixing(),
+                               maxiter=scfres.maxiter, callback=callback);
 println(scfres.energies)
 end_time = time_ns()
 println(DFTK.timer)

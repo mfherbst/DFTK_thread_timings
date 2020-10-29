@@ -15,5 +15,6 @@ scfres   = self_consistent_field(basis; tol=100, maxiter=1, mixing=SimpleMixing(
 
 # Truncate scfres such that density is guess density
 scfres = (ρ=guess_density(basis), ρspin=nothing, basis=basis, ψ=scfres.ψ,
-          occupation=scfres.occupation, eigenvalues=scfres.eigenvalues, εF=scfres.εF)
+          occupation=scfres.occupation, eigenvalues=scfres.eigenvalues, εF=scfres.εF,
+          maxiter=12)
 save_scfres("Aluminium_slab_scfres_guess.jld2", scfres)

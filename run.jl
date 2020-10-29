@@ -18,10 +18,10 @@ function run_julia_payload(;case, n_julia, n_blas, n_fft)
     ENV["DFTK_BENCHMARK_PAYLOAD"] = case * "_scfres_guess.jld2"
 
     !isdir(case) && mkdir(case)
-    logfile = case * "/$(n_julia)_$(n_fft)_$(n_blas).log"
+    logfile = case * "/$(n_julia)_$(n_blas)_$(n_fft).log"
     if !isfile(logfile)
         generate_input_data(case)
-        println("Running case=$case, n_julia=$n_julia, n_fft=$n_fft, n_blas=$n_blas")
+        println("Running case=$case, n_julia=$n_julia, n_blas=$n_blas, n_fft=$n_fft")
         open(logfile, "w") do fp
             redirect_stdout(fp) do
                 run(`$juliaexe --project=@. $(joinpath(@__DIR__, "payload.jl"))`)
@@ -55,14 +55,14 @@ function run_cases(df; checkpoint=nothing)
 end
 
 
-function make_matrix(case::AbstractVector; n_julia=1:1, n_blas=1:1, n_fft=1:1)
+function make_matrix(case::String; n_julia=1:1, n_blas=1:1, n_fft=1:1)
     data  = (case=String[],
              n_julia=Int[],
              n_blas=Int[],
              n_fft=Int[],
              time=Union{Int,Missing}[])
-    for pl in case, nj in n_julia, nb in n_blas, nf in n_fft
-        push!(data.case, pl)
+    for nj in n_julia, nb in n_blas, nf in n_fft
+        push!(data.case, case)
         push!(data.n_julia, nj)
         push!(data.n_blas,  nb)
         push!(data.n_fft,   nf)
@@ -74,17 +74,27 @@ end
 
 function generate_initial_dataframe()
     df = DataFrame()
-    append!(df, make_matrix(["Si"], n_julia=1:2, n_blas=1:2, n_fft=1:2))
-    append!(df, make_matrix(["Fe"], n_julia=1:4, n_blas=1:4, n_fft=1:4))
-    append!(df, make_matrix(["CoFeGaMn"], n_julia=1:4, n_blas=1:4, n_fft=1:4))
-    append!(df, make_matrix(["Caffeine"], n_julia=1:4, n_blas=1:4, n_fft=1:4))
-    df
+    append!(df, make_matrix("Si", n_julia=1:2, n_blas=1:2, n_fft=1:2))
+    for case in ("Fe", "Aluminium_slab", "Caffeine")
+        append!(df, make_matrix(case, n_julia=1:4, n_blas=1:4, n_fft=1:4))
+        for i in (5, 6, 7, 8)
+            append!(df, make_matrix(case, n_julia=i:i, n_blas=4:i, n_fft=1:2))
+        end
+    end
+    for case in ("CoFeGaMn", )
+        append!(df, make_matrix(case, n_julia=1:3, n_blas=1:3, n_fft=1:3))
+        for i in (4, 5, 6, 7, 8)
+            append!(df, make_matrix(case, n_julia=i:i, n_blas=4:i, n_fft=1:1))
+        end
+    end
+    unique(df)
 end
 
 
 function main()
-    if isdir("results.jdf")
-        df = loadjdf("results.jdf")
+    resultfile = "results.jdf"
+    if isdir(resultfile)
+        df = loadjdf(resultfile)
         for row in eachrow(generate_initial_dataframe())
             exists_in_df = any(eachrow(df)) do dfr
                 all(dfr[1:4] == row[1:4])
@@ -94,7 +104,7 @@ function main()
     else
         df = generate_initial_dataframe()
     end
-    run_cases(df, checkpoint="results.jdf")
+    run_cases(df, checkpoint=resultfile)
 end
 
 

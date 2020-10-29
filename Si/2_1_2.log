@@ -1,7 +1,9 @@
+Julia version: 1.6.0-DEV.1324
+
 Threading configuration: 
        JULIA_NUM_THREADS:   2
-      JULIA_FFTW_THREADS:   1
-      JULIA_BLAS_THREADS:   2
+      JULIA_FFTW_THREADS:   2
+      JULIA_BLAS_THREADS:   1
 Payload:  Si_scfres_guess.jld2
 
 System facts:
@@ -15,14 +17,14 @@ Timing SCF ...
 
 n     Free energy       Eₙ-Eₙ₋₁     ρout-ρin   Diag
 ---   ---------------   ---------   --------   ----
-  1   -7.874348356460         NaN   1.98e-01    1.0 
-  2   -7.876891579680   -2.54e-03   3.52e-02    2.2 
-  3   -7.877017294910   -1.26e-04   3.81e-03    1.0 
-  4   -7.877023802164   -6.51e-06   5.63e-04    2.7 
-  5   -7.877024161805   -3.60e-07   9.39e-05    2.7 
-  6   -7.877024166310   -4.51e-09   1.38e-05    3.1 
-  7   -7.877024166548   -2.38e-10   2.59e-06    2.7 
-  8   -7.877024166553   -4.40e-12   2.66e-07    2.8 
+  1   -7.874345259423         NaN   1.98e-01    1.0 
+  2   -7.876891325934   -2.55e-03   3.52e-02    2.1 
+  3   -7.877017270804   -1.26e-04   3.80e-03    1.0 
+  4   -7.877023775411   -6.50e-06   5.53e-04    2.8 
+  5   -7.877024162502   -3.87e-07   9.95e-05    2.6 
+  6   -7.877024166253   -3.75e-09   1.84e-05    3.2 
+  7   -7.877024166547   -2.94e-10   2.64e-06    2.2 
+  8   -7.877024166553   -5.53e-12   2.80e-07    3.1 
 Energy breakdown:
     Kinetic             3.1335538 
     AtomicLocal         -2.0957826
@@ -30,7 +32,7 @@ Energy breakdown:
     Ewald               -8.4004648
     PspCorrection       -0.2100813
     Hartree             0.5438531 
-    Xc                  -2.4137397
+    Xc                  -2.4137398
     Entropy             -0.0016958
 
     total               -7.877024166553
@@ -38,21 +40,21 @@ Energy breakdown:
  ──────────────────────────────────────────────────────────────────────────────
                                        Time                   Allocations      
                                ──────────────────────   ───────────────────────
-       Tot / % measured:            12.7s / 80.4%           2.43GiB / 87.2%    
+       Tot / % measured:            12.9s / 80.6%           2.44GiB / 87.2%    
 
  Section               ncalls     time   %tot     avg     alloc   %tot      avg
  ──────────────────────────────────────────────────────────────────────────────
- self_consistent_field      1    10.2s   100%   10.2s   2.11GiB  100%   2.11GiB
-   LOBPCG                  80    6.33s  62.1%  79.1ms   1.10GiB  52.0%  14.1MiB
-     Hamiltonian mu...    262    954ms  9.36%  3.64ms   72.3MiB  3.34%   282KiB
-     ortho                721   88.5ms  0.87%   123μs   74.6MiB  3.44%   106KiB
-     block multipli...    772   83.6ms  0.82%   108μs   68.6MiB  3.17%  91.0KiB
-     rayleigh_ritz        182   61.1ms  0.60%   336μs   9.33MiB  0.43%  52.5KiB
-   energy_hamiltonian      17    479ms  4.70%  28.2ms    392MiB  18.1%  23.0MiB
-   compute_density          8    443ms  4.35%  55.4ms    350MiB  16.1%  43.7MiB
-   KerkerDosMixing          8    358ms  3.51%  44.8ms   50.0MiB  2.31%  6.26MiB
-     KerkerMixing           8    283ms  2.78%  35.4ms   46.5MiB  2.15%  5.82MiB
-   QR orthonormaliz...     80   27.7μs  0.00%   346ns     0.00B  0.00%    0.00B
+ self_consistent_field      1    10.4s   100%   10.4s   2.13GiB  100%   2.13GiB
+   LOBPCG                  80    6.50s  62.3%  81.3ms   1.11GiB  52.1%  14.2MiB
+     Hamiltonian mu...    260    1.28s  12.3%  4.92ms   86.5MiB  3.96%   340KiB
+     block multipli...    760    106ms  1.02%   140μs   68.1MiB  3.12%  91.7KiB
+     ortho                708   96.4ms  0.92%   136μs   74.2MiB  3.40%   107KiB
+     rayleigh_ritz        180   63.2ms  0.61%   351μs   9.28MiB  0.43%  52.8KiB
+   energy_hamiltonian      17    614ms  5.88%  36.1ms    392MiB  18.0%  23.1MiB
+   compute_density          8    384ms  3.68%  48.0ms    352MiB  16.1%  44.0MiB
+   KerkerDosMixing          8    357ms  3.43%  44.7ms   50.1MiB  2.29%  6.26MiB
+     KerkerMixing           8    282ms  2.71%  35.3ms   46.5MiB  2.13%  5.82MiB
+   QR orthonormaliz...     80   25.7μs  0.00%   321ns     0.00B  0.00%    0.00B
  ──────────────────────────────────────────────────────────────────────────────
 
-Total time in ns: 11249663734
+Total time in ns: 11485192677
