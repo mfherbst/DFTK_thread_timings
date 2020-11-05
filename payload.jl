@@ -10,8 +10,11 @@ mprintln(args...) = mpi_master() ? println(args...) : nothing
 
 mprintln("Julia version: $VERSION\n")
 mprintln("Threading configuration: ")
-for id in ("JULIA_NUM_THREADS", "JULIA_FFTW_THREADS", "JULIA_BLAS_THREADS")
-    mpi_master() && @printf "    %20s: % 3s\n" id ENV[id]
+if mpi_master()
+    for id in ("JULIA_NUM_THREADS", "JULIA_FFTW_THREADS", "JULIA_BLAS_THREADS")
+        @printf "    %20s: % 3s\n" id ENV[id]
+    end
+    @printf "    %20s: % 3s\n" "MPI Processes" mpi_nprocs()
 end
 FFTW.set_num_threads(parse(Int, ENV["JULIA_FFTW_THREADS"]))
 BLAS.set_num_threads(parse(Int, ENV["JULIA_BLAS_THREADS"]))
