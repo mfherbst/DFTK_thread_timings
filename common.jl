@@ -8,9 +8,12 @@ function generate_input_data(case)
     end
 end
 
-function run_julia_payload(;case, n_julia, n_blas, n_fft, run_calculations=true)
+function run_julia_payload(;case, n_julia, n_blas, n_fft, n_mpi, run_calculations=true)
     juliaexe = Sys.get_process_title()
-    isempty(juliaexe) && (juliaexe = "julia")
+    isempty(juliaexe) && (juliaexe = `julia`)
+    if n_mpi > 1
+        juliaexe = `$(homedir())/.julia/bin/mpiexecjl --project=@. -np $n_mpi $juliaexe`
+    end
 
     ENV["JULIA_NUM_THREADS"]  = string(n_julia)
     ENV["JULIA_FFTW_THREADS"] = string(n_fft)
@@ -18,11 +21,11 @@ function run_julia_payload(;case, n_julia, n_blas, n_fft, run_calculations=true)
     ENV["DFTK_BENCHMARK_PAYLOAD"] = case * "_scfres_guess.jld2"
 
     !isdir(case) && mkdir(case)
-    logfile = case * "/$(n_julia)_$(n_blas)_$(n_fft).log"
+    logfile = case * "/$(n_mpi)_$(n_julia)_$(n_blas)_$(n_fft).log"
     if !isfile(logfile)
         run_calculations || return missing
         generate_input_data(case)
-        println("Running case=$case, n_julia=$n_julia, n_blas=$n_blas, n_fft=$n_fft")
+        println("Running case=$case, n_mpi=$n_mpi n_julia=$n_julia, n_blas=$n_blas, n_fft=$n_fft")
         open(logfile, "w") do fp
             redirect_stdout(fp) do
                 run(`$juliaexe --project=@. $(joinpath(@__DIR__, "payload.jl"))`)
@@ -56,14 +59,16 @@ function run_cases(df; checkpoint=nothing)
 end
 
 
-function make_matrix(case::String; n_julia=1:1, n_blas=1:1, n_fft=1:1)
+function make_matrix(case::String; n_julia=1:1, n_blas=1:1, n_fft=1:1, n_mpi=1:1)
     data  = (case=String[],
+             n_mpi=Int[],
              n_julia=Int[],
              n_blas=Int[],
              n_fft=Int[],
              time=Union{Int,Missing}[])
-    for nj in n_julia, nb in n_blas, nf in n_fft
-        push!(data.case, case)
+    for nm in n_mpi, nj in n_julia, nb in n_blas, nf in n_fft
+        push!(data.case,    case)
+        push!(data.n_mpi,   nm)
         push!(data.n_julia, nj)
         push!(data.n_blas,  nb)
         push!(data.n_fft,   nf)
@@ -82,6 +87,9 @@ function generate_initial_dataframe()
         for i in (5, 6, 7, 8)
             append!(df, make_matrix(case, n_julia=i:i, n_blas=4:i, n_fft=1:2))
         end
+        if case in ("Fe", "Aluminium_slab")
+            append!(df, make_matrix(case, n_mpi=1:16))
+        end
     end
     for case in ("CoFeGaMn", )
         append!(df, make_matrix(case, n_julia=1:3, n_blas=1:3, n_fft=1:1))
@@ -89,6 +97,7 @@ function generate_initial_dataframe()
         for i in (4, 5, 6, 7, 8)
             append!(df, make_matrix(case, n_julia=i:i, n_blas=4:i, n_fft=1:1))
         end
+        append!(df, make_matrix(case, n_mpi=[1, 2, 4, 8, 16]))
     end
     unique(df)
 end
