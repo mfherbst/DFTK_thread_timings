@@ -1,7 +1,7 @@
 include("common.jl")
 using Plots
 
-function plot_all_cases(df, basetime, x, y=:time; caseminima=Dict(), kwargs...)
+function plot_all_cases(df, basetime, x, y=:time; caseminima=Dict(), ideal=identity, kwargs...)
     cases = unique(df[.!ismissing.(df.time), :].case)
     p = plot(;xlabel=string(x), ylabel="relative $y", legend=:topright, kwargs...)
 
@@ -14,6 +14,8 @@ function plot_all_cases(df, basetime, x, y=:time; caseminima=Dict(), kwargs...)
             plot!(p, xvals, minimum * ones(Float64, size(yvals)), color=i, label="", linestyle=:dot)
         end
     end
+    xvals = getproperty(df[df.case .== "Fe", :], x)
+    plot!(p, xvals, 1 ./ ideal.(xvals), label="perfect scaling", colour=:black, linestyle=:dash)
     p
 end
 
@@ -42,14 +44,18 @@ p3 = plot_all_cases(df[(df.n_blas .== 1)  .& (df.n_fft .== 1),  :], basetime, :n
 p = plot(p1, p2, p3)
 savefig(p, "thread_axes.pdf")
 
-ylims = (0.2, 1.0)
+ylims = (0.0, 1.0)
 q1 = plot_all_cases(df[(df.n_blas .== df.n_julia)  .& (df.n_fft .== 1),  :], basetime, :n_julia;
-                    title="n_julia = n_blas, n_fft = 1", ylims=ylims, caseminima=caseminima, legend=:topright)
+                    title="n_julia = n_blas, n_fft = 1", ylims=ylims,
+                    caseminima=caseminima, legend=:topright)
 q2 = plot_all_cases(df[(df.n_blas .== df.n_julia)  .& (df.n_fft .== 2),  :], basetime, :n_julia;
-                    title="n_julia = n_blas, n_fft = 2", ylims=ylims, caseminima=caseminima, legend=:none)
+                    title="n_julia = n_blas, n_fft = 2", ylims=ylims, ideal=x -> 2x,
+                    caseminima=caseminima, legend=:none)
 q3 = plot_all_cases(df[(df.n_blas .== min.(6, df.n_julia)) .& (df.n_fft .== 1),  :], basetime, :n_julia;
-                    title="n_blas = min(6, n_julia), n_fft = 1", ylims=ylims, caseminima=caseminima, legend=:none)
+                    title="n_blas = min(6, n_julia), n_fft = 1", ylims=ylims,
+                    caseminima=caseminima, legend=:none)
 q4 = plot_all_cases(df[(df.n_blas .== min.(6, df.n_julia)) .& (df.n_fft .== 2),  :], basetime, :n_julia;
-                    title="n_blas = min(6, n_julia), n_fft = 2", ylims=ylims, caseminima=caseminima, legend=:none)
+                    title="n_blas = min(6, n_julia), n_fft = 2", ylims=ylims,
+                    caseminima=caseminima, legend=:none, ideal=x-> 2x)
 q = plot(q1, q2, q3, q4)
 savefig(q, "thread_settings.pdf")
