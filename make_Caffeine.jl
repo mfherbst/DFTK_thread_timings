@@ -7,7 +7,8 @@ lattice = load_lattice("Caffeine.abi")
 atoms   = [ElementPsp(el.symbol, psp=load_psp(el.symbol, functional="pbe")) => position
            for (el, position) in load_atoms("Caffeine.abi")]
 
-model = model_PBE(lattice, atoms)
+xc = Xc(:gga_x_pbe, :gga_c_pbe, density_threshold=1e-16)
+model = model_DFT(lattice, atoms, xc)
 basis = PlaneWaveBasis(model, Ecut, kgrid=[1, 1, 1])
 scfres = self_consistent_field(basis; tol=100, maxiter=1, mixing=SimpleMixing(0.0))
 

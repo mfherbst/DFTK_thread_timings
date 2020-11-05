@@ -77,13 +77,15 @@ function generate_initial_dataframe()
     df = DataFrame()
     append!(df, make_matrix("Si", n_julia=1:2, n_blas=1:2, n_fft=1:2))
     for case in ("Fe", "Aluminium_slab", "Caffeine")
-        append!(df, make_matrix(case, n_julia=1:4, n_blas=1:4, n_fft=1:4))
+        append!(df, make_matrix(case, n_julia=1:4, n_blas=1:4, n_fft=1:2))
+        append!(df, make_matrix(case, n_julia=1:1, n_blas=1:1, n_fft=3:4))
         for i in (5, 6, 7, 8)
             append!(df, make_matrix(case, n_julia=i:i, n_blas=4:i, n_fft=1:2))
         end
     end
     for case in ("CoFeGaMn", )
-        append!(df, make_matrix(case, n_julia=1:3, n_blas=1:3, n_fft=1:3))
+        append!(df, make_matrix(case, n_julia=1:3, n_blas=1:3, n_fft=1:1))
+        append!(df, make_matrix(case, n_julia=1:1, n_blas=1:1, n_fft=1:3))
         for i in (4, 5, 6, 7, 8)
             append!(df, make_matrix(case, n_julia=i:i, n_blas=4:i, n_fft=1:1))
         end
