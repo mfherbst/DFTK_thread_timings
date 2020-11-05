@@ -1,0 +1,78 @@
+Julia version: 1.6.0-DEV.1324
+
+Threading configuration: 
+       JULIA_NUM_THREADS:   1
+      JULIA_FFTW_THREADS:   1
+      JULIA_BLAS_THREADS:   1
+           MPI Processes:  11
+Payload:  Fe_scfres_guess.jld2
+
+System facts:
+    fft_size:      (30, 30, 30)
+    kpoints:       16
+    n_electrons:   16
+    n_bands:       23
+
+Compiling code ...
+Timing SCF ...
+
+n     Free energy       Eₙ-Eₙ₋₁     ρout-ρin   Magnet   Diag
+---   ---------------   ---------   --------   ------   ----
+  1   -111.8084467724         NaN   5.13e+00    2.000    1.0 
+  2   -116.7235982985   -4.92e+00   3.03e+00    2.000    5.3 
+  3   -120.7864693845   -4.06e+00   1.12e+00    2.387    5.0 
+  4   -121.8709129505   -1.08e+00   2.62e-01    2.625    5.0 
+  5   -121.8961599581   -2.52e-02   3.11e-01    2.373    3.3 
+  6   -121.9451267124   -4.90e-02   1.65e-01    2.142    2.7 
+  7   -121.9132217666    3.19e-02   2.27e-01    2.150    2.4 
+  8   -121.9485824496   -3.54e-02   4.08e-02    1.882    2.4 
+  9   -121.9494018909   -8.19e-04   1.10e-02    1.908    2.0 
+ 10   -121.9494537590   -5.19e-05   5.91e-03    1.932    2.0 
+ 11   -121.9494571660   -3.41e-06   7.27e-04    1.933    2.1 
+ 12   -121.9494574308   -2.65e-07   2.98e-04    1.929    3.4 
+ 13   -121.9494574258    5.04e-09   6.53e-05    1.928    2.8 
+ 14   -121.9494574191    6.69e-09   1.65e-05    1.928    2.8 
+ 15   -121.9494574189    1.91e-10   2.72e-06    1.928    3.0 
+ 16   -121.9494574191   -2.01e-10   7.04e-07    1.928    3.2 
+ 17   -121.9494574191    6.84e-12   1.79e-07    1.928    2.8 
+Energy breakdown:
+    Kinetic             59.3814283
+    AtomicLocal         -99.3605618
+    AtomicNonlocal      -16.5408025
+    Ewald               -85.8892161
+    PspCorrection       3.5081636 
+    Hartree             29.7313729
+    Xc                  -12.7787483
+    Entropy             -0.0010934
+
+    total               -121.949457419087
+
+ ──────────────────────────────────────────────────────────────────────────────
+                                       Time                   Allocations      
+                               ──────────────────────   ───────────────────────
+       Tot / % measured:            47.8s / 94.1%           8.22GiB / 96.2%    
+
+ Section               ncalls     time   %tot     avg     alloc   %tot      avg
+ ──────────────────────────────────────────────────────────────────────────────
+ self_consistent_field      1    45.0s   100%   45.0s   7.90GiB  100%   7.90GiB
+   LOBPCG                 272    25.4s  56.6%  93.5ms   4.00GiB  50.6%  15.1MiB
+     Hamiltonian mu...  1.09k    14.5s  32.2%  13.3ms    565MiB  6.98%   531KiB
+       kinetic+local    1.09k    13.7s  30.5%  12.6ms   43.9MiB  0.54%  41.2KiB
+       nonlocal         1.09k    588ms  1.31%   539μs    295MiB  3.64%   277KiB
+     block multipli...  3.76k    2.32s  5.15%   617μs    775MiB  9.58%   211KiB
+     rayleigh_ritz        819    1.31s  2.91%  1.60ms    130MiB  1.60%   162KiB
+     ortho              3.39k    1.14s  2.53%   335μs    121MiB  1.49%  36.5KiB
+   compute_density         17    10.7s  23.8%   629ms    344MiB  4.25%  20.3MiB
+   energy_hamiltonian      35    3.90s  8.68%   111ms   3.07GiB  38.9%  89.9MiB
+     ene_ops               35    3.66s  8.15%   105ms   2.83GiB  35.8%  82.8MiB
+       ene_ops: xc         35    2.23s  4.96%  63.7ms   2.57GiB  32.5%  75.2MiB
+       ene_ops: kin...     35    402ms  0.89%  11.5ms    191MiB  2.37%  5.47MiB
+       ene_ops: non...     35    172ms  0.38%  4.91ms   8.83MiB  0.11%   258KiB
+       ene_ops: har...     35   35.5ms  0.08%  1.01ms   43.5MiB  0.54%  1.24MiB
+       ene_ops: local      35   21.0ms  0.05%   601μs   18.2MiB  0.22%   532KiB
+   KerkerDosMixing         17    875ms  1.95%  51.5ms    141MiB  1.75%  8.32MiB
+     KerkerMixing          17    535ms  1.19%  31.5ms    114MiB  1.41%  6.73MiB
+   QR orthonormaliz...    272    200μs  0.00%   737ns     0.00B  0.00%    0.00B
+ ──────────────────────────────────────────────────────────────────────────────
+
+Total time in ns: 46177019514

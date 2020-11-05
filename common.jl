@@ -87,9 +87,8 @@ function generate_initial_dataframe()
         for i in (5, 6, 7, 8)
             append!(df, make_matrix(case, n_julia=i:i, n_blas=4:i, n_fft=1:2))
         end
-        if case in ("Fe", "Aluminium_slab")
-            append!(df, make_matrix(case, n_mpi=1:16))
-        end
+        case == "Fe"             && append!(df, make_matrix(case, n_mpi=1:16))
+        case == "Aluminium_slab" && append!(df, make_matrix(case, n_mpi=1:16))
     end
     for case in ("CoFeGaMn", )
         append!(df, make_matrix(case, n_julia=1:3, n_blas=1:3, n_fft=1:1))
